@@ -1,0 +1,9 @@
+{
+  "verbose": true,
+  "ignore": ["src/*.test.js"],
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "ext": "js",
+  "exec": "node --experimental-modules index.js"
+}

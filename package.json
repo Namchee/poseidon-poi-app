@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node --experimental-modules index.js",
+    "start": "node --experimental-modules --es-module-specifier-resolution=node index.js",
     "dev": "nodemon",
     "test": "jest"
   },

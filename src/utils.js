@@ -15,13 +15,13 @@ function isBase64(str) {
 }
 
 /**
- * A utility function to generate MD5 hash from password
+ * A utility function to generate SHA 256 hash from password
  *
  * @param {string} pass Password to be hashed
- * @return {string} Hashed MD5 password
+ * @return {string} Hashed SHA256 password
  */
 function generatePasswordHash(pass) {
-  return crypto.createHash('md5').update(pass).digest('hex');
+  return crypto.createHash('sha256').update(pass).digest('base64').substring(0, 32);
 }
 
 /**
@@ -31,24 +31,35 @@ function generatePasswordHash(pass) {
  * @param {string} pass String used for password, a.k.a key
  * @return {string} Decoded string 
  */
-function decodeAES256(str, pass) {
+export function decodeAES256(str, pass) {
   const passHash = generatePasswordHash(pass);
-  const iv = process.env.IV_STRING;
+  const iv = 'proif-kelompok-2';
 
-  const decipher = crypto.createDecipheriv('aes-256-ccm', Buffer.from(passHash), Buffer.from(iv));
-  let plainText = decipher.update(Buffer.from(str));
-  plainText = Buffer.concat([plainText, decipher.final()]);
+  const decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(passHash), Buffer.from(iv));
+
+  let plainText = decipher.update(Buffer.from(str, 'base64'));
+  plainText = Buffer.concat([plainText, Buffer.from(decipher.final())]);
+  
   return plainText.toString();
 }
 
 /**
- * A function to check if string is a valid EMV payload
+ * A function to check if string is a valid EMV payload.
+ * Will throw an error with proper message if payload is invalid
  *
  * @param {string} str String to be checked
- * @return {boolean} `true` if string is a valid EMV payload, `false` otherwise 
+ * @return {string} Decrypted EMV QR code payload
  */
 export function isValidEMVString(str, pass) {
   const payload = decodeAES256(str, pass);
 
-  return payload.substring(0, 8) === 'hQVDUFY' && isBase64(payload);
+  if (payload.substring(0, 8) !== 'hQVDUFY') {
+    throw new Error('Wrong PIN or not EMV QR code');
+  }
+
+  if (!isBase64(payload)) {
+    throw new Error('Not base64 encoded string');
+  }
+
+  return payload;
 }

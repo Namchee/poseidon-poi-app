@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import { CustomError } from './types';
 
 /**
  * A utility function to check if a string is a valid base64 encoded string
@@ -15,17 +16,18 @@ function isBase64(str) {
 }
 
 /**
- * A utility function to generate SHA 256 hash from password
+ * A utility function to generate MD5 hash from password to
+ * hexadecimal string
  *
  * @param {string} pass Password to be hashed
- * @return {string} Hashed SHA256 password
+ * @return {string} Hashed MD5 password in hex string
  */
 function generatePasswordHash(pass) {
-  return crypto.createHash('sha256').update(pass).digest('base64').substring(0, 32);
+  return crypto.createHash('md5').update(pass).digest('hex');
 }
 
 /**
- * A function to decode input string with AES algorithm in CTR mode
+ * A function to decode input string with AES algorithm in CBC mode
  *
  * @param {string} str Encyrpted string
  * @param {string} pass String used for password, a.k.a key
@@ -44,21 +46,21 @@ export function decodeAES256(str, pass) {
 }
 
 /**
- * A function to check if string is a valid EMV payload.
+ * A function to perform basic decode and basic validation to QR payload
  * Will throw an error with proper message if payload is invalid
  *
  * @param {string} str String to be checked
  * @return {string} Decrypted EMV QR code payload
  */
-export function isValidEMVString(str, pass) {
+export function decodeEMVString(str, pass) {
   const payload = decodeAES256(str, pass);
 
   if (payload.substring(0, 8) !== 'hQVDUFY') {
-    throw new Error('Wrong PIN or not EMV QR code');
+    throw new CustomError('Wrong PIN or not EMV QR code', 401);
   }
 
   if (!isBase64(payload)) {
-    throw new Error('Not base64 encoded string');
+    throw new CustomError('Not base64 encoded string', 400);
   }
 
   return payload;

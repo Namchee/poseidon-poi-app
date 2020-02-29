@@ -11,7 +11,7 @@ const port = process.env.PORT || 3000;
 app.post('/poi-app', (req, res, next) => {
   const auth = req.headers.authorization;
 
-  if (!auth || auth !== 'proif-kelompok-2') {
+  if (!auth || auth !== 'Bearer proif-kelompok-2') {
     return req.status(403).json({
       data: null,
       error: 'Unauthorized',

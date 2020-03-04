@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { CustomError } from './types';
+import { CustomError } from './types.js';
 
 /**
  * A utility function to check if a string is a valid base64 encoded string

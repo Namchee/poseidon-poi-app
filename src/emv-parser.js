@@ -1,5 +1,5 @@
 import emv from 'node-emv';
-import { CustomError } from './types';
+import { CustomError } from './types.js';
 import { promisify } from 'util';
 
 const parse = promisify(emv.parse);

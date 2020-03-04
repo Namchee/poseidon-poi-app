@@ -1,11 +1,13 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import { decodeEMVString } from './src/utils';
-import { checkPaymentStatus } from './src/emv-parser';
+import logger from 'morgan';
+import { decodeEMVString } from './src/utils.js';
+import { checkPaymentStatus } from './src/emv-parser.js';
 
 dotenv.config();
 
 const app = express();
+app.use(logger('dev'));
 const port = process.env.PORT || 3000;
 
 app.post('/poi-app', (req, res, next) => {

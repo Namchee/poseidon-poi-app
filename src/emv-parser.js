@@ -21,11 +21,11 @@ export async function checkPaymentStatus(str) {
 
   // check payload format indicator
   if (data[0].tag !== '85' || Buffer.from(data[0].value, 'hex').toString('utf8') !== 'CPV01') {
-    throw new Error('Data doesn\'t match specification');
+    throw new CustomError('Data doesn\'t match specification', 400);
   }
 
   if (!data.some(tlv => tlv.tag === '61')) {
-    throw new Error('Data should contain at least one "Application Template"');
+    throw new CustomError('Data should contain at least one "Application Template"', 400);
   }
 
   for (const mainTag of data) {
@@ -37,7 +37,7 @@ export async function checkPaymentStatus(str) {
               const aid = Buffer.from(appTag.value, 'hex').toString('utf8');
 
               if (!aid.startsWith(process.env.AID)) {
-                throw new Error('Unsupported AID');
+                throw new CustomError('Unsupported AID', 400);
               }
 
               break;
@@ -54,10 +54,16 @@ export async function checkPaymentStatus(str) {
                 return false;
               }
 
+              /*
               const date = Date.parse(`${expTime.substring(0, 2)}-${expTime.substring(2, 4)}-${new Date().getDate()}`);
 
               if (date < new Date().getTime()) {
                 throw new Error('Payment card has expired');
+              }
+              */
+
+              if (disData !== process.env.DIS_DATA) {
+                throw new CustomError('Unsupported dicretionary data', 400);
               }
 
               break;

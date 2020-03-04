@@ -41,7 +41,7 @@ export function decodeAES256(str, pass) {
 
   let plainText = decipher.update(Buffer.from(str, 'base64'));
   plainText = Buffer.concat([plainText, Buffer.from(decipher.final())]);
-  
+
   return plainText.toString();
 }
 
@@ -53,15 +53,19 @@ export function decodeAES256(str, pass) {
  * @return {string} Decrypted EMV QR code payload
  */
 export function decodeEMVString(str, pass) {
-  const payload = decodeAES256(str, pass);
+  try {
+    const payload = decodeAES256(str, pass);
 
-  if (payload.substring(0, 8) !== 'hQVDUFY') {
-    throw new CustomError('Wrong PIN or not EMV QR code', 401);
+    if (payload.substring(0, 8) !== 'hQVDUFY') {
+      throw new CustomError('Wrong PIN or not EMV QR code', 401);
+    }
+
+    if (!isBase64(payload)) {
+      throw new CustomError('Not base64 encoded string', 400);
+    }
+
+    return payload;
+  } catch (err) {
+    throw new Error('Decode error');
   }
-
-  if (!isBase64(payload)) {
-    throw new CustomError('Not base64 encoded string', 400);
-  }
-
-  return payload;
 }

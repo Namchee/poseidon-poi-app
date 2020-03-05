@@ -1,17 +1,18 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import logger from 'morgan';
-import { decodeEMVString } from './src/utils.js';
-import { checkPaymentStatus } from './src/emv-parser.js';
-
-if (process.env.NODE_ENV !== 'production') {
-  dotenv.config();
-}
+const express = require('express');
+const logger = require('morgan');
+const decodeEMVString = require('./src/utils').decodeEMVString;
+const checkPaymentStatus = require('./src/emv-parser').checkPaymentStatus;
 
 const app = express();
 app.use(express.json());
-app.use(logger('dev'));
 const port = process.env.PORT || 3000;
+
+if (process.env.NODE_ENV !== 'production') {
+  const dotenv = require('dotenv');
+  dotenv.config();
+  
+  app.use(logger('dev'));
+}
 
 app.post('/poi-app', (req, res, next) => {
   const auth = req.headers.authorization;

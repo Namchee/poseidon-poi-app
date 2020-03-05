@@ -1,6 +1,6 @@
-import emv from 'node-emv';
-import { CustomError } from './types.js';
-import { promisify } from 'util';
+const emv = require('node-emv');
+const CustomError = require('./types').CustomError;
+const promisify = require('util').promisify;
 
 const parse = promisify(emv.parse);
 
@@ -12,7 +12,7 @@ const parse = promisify(emv.parse);
  * @return {boolean} `true` if card is accepted, `false` otherwise
  * @throw An error if payload doesn't match specification
  */
-export async function checkPaymentStatus(str) {
+async function checkPaymentStatus(str) {
   const data = await parse(str);
 
   if (data.length === 0) {
@@ -76,3 +76,5 @@ export async function checkPaymentStatus(str) {
 
   return true;
 }
+
+module.exports.checkPaymentStatus = checkPaymentStatus;

@@ -1,5 +1,5 @@
-import crypto from 'crypto';
-import { CustomError } from './types.js';
+const crypto = require('crypto');
+const CustomError = require('./types').CustomError;
 
 /**
  * A utility function to check if a string is a valid base64 encoded string
@@ -33,7 +33,7 @@ function generatePasswordHash(pass) {
  * @param {string} pass String used for password, a.k.a key
  * @return {string} Decoded string 
  */
-export function decodeAES256(str, pass) {
+function decodeAES256(str, pass) {
   const passHash = generatePasswordHash(pass);
   const iv = 'proif-kelompok-2';
 
@@ -52,7 +52,7 @@ export function decodeAES256(str, pass) {
  * @param {string} str String to be checked
  * @return {string} Decrypted EMV QR code payload
  */
-export function decodeEMVString(str, pass) {
+function decodeEMVString(str, pass) {
   try {
     const payload = decodeAES256(str, pass);
 
@@ -69,3 +69,5 @@ export function decodeEMVString(str, pass) {
     throw new Error('Decode error');
   }
 }
+
+module.exports.decodeEMVString = decodeEMVString;

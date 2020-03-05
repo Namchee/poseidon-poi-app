@@ -66,7 +66,7 @@ function decodeEMVString(str, pass) {
 
     return payload;
   } catch (err) {
-    throw new Error('Decode error');
+    throw new CustomError(err.message);
   }
 }
 

@@ -63,7 +63,7 @@ async function checkPaymentStatus(str) {
                   throw new CustomError('Credit card rejected', 400);
                 }
 
-                if (ccn === process.env.CCN && serviceCode !== process.env.SVC) {
+                if (ccn === process.env.CCN && serviceCode != process.env.SVC) {
                   throw new CustomError('Service code for this credit card is unsupported', 400);
                 }
 

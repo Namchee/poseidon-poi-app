@@ -4,7 +4,9 @@ import logger from 'morgan';
 import { decodeEMVString } from './src/utils.js';
 import { checkPaymentStatus } from './src/emv-parser.js';
 
-dotenv.config();
+if (process.env.NODE_ENV !== 'production') {
+  dotenv.config();
+}
 
 const app = express();
 app.use(express.json());

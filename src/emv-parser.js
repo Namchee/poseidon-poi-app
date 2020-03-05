@@ -16,8 +16,6 @@ async function checkPaymentStatus(str) {
   const hexString = Buffer.from(str, 'base64').toString('hex');
   const data = await parse(hexString);
 
-  console.log(data);
-
   if (data.length === 0) {
     throw new CustomError('Not EMV BER TLV encoded data', 400);
   }

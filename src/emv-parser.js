@@ -44,7 +44,9 @@ async function checkPaymentStatus(str) {
     for (const mainTag of data) {
       switch (mainTag.tag) {
         case '61': {
+          console.log(JSON.stringify(mainTag.value, null, 2));
           for (const appTag of mainTag.value) {
+            console.log(appTag.tag);
             switch (appTag.tag) {
               case '4F': { // parse AID
                 const aid = Buffer.from(appTag.value, 'hex').toString('utf8');

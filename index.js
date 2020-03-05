@@ -1,5 +1,4 @@
 const express = require('express');
-const logger = require('morgan');
 const decodeEMVString = require('./src/utils').decodeEMVString;
 const checkPaymentStatus = require('./src/emv-parser').checkPaymentStatus;
 
@@ -8,6 +7,7 @@ app.use(express.json());
 const port = process.env.PORT || 3000;
 
 if (process.env.NODE_ENV !== 'production') {
+  const logger = require('morgan');
   const dotenv = require('dotenv');
   dotenv.config();
   

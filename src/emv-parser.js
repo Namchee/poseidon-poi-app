@@ -29,6 +29,8 @@ async function checkPaymentStatus(str) {
     throw new CustomError('Data should contain at least one "Application Template"', 400);
   }
 
+  console.log('passed basic check');
+
   for (const mainTag of data) {
     switch (mainTag.tag) {
       case '61': {
@@ -36,6 +38,8 @@ async function checkPaymentStatus(str) {
           switch (appTag.tag) {
             case '4F': { // parse AID
               const aid = Buffer.from(appTag.value, 'hex').toString('utf8');
+
+              console.log(aid);
 
               if (!aid.startsWith(process.env.AID)) {
                 throw new CustomError('Unsupported AID', 400);
@@ -51,6 +55,8 @@ async function checkPaymentStatus(str) {
               const serviceCode = separated[1].slice(4, 7);
               const disData = separated[1].slice(7);
 
+              console.log('parse track 2');
+              
               if (ccn !== process.env.CCN) {
                 return false;
               }

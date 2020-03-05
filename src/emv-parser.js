@@ -24,8 +24,6 @@ async function checkPaymentStatus(str) {
     const hexString = Buffer.from(str, 'base64').toString('hex');
     const data = await parse(hexString);
 
-    console.log('hai')
-
     if (data.length === 0) {
       throw new CustomError('Not EMV BER TLV encoded data', 400);
     }
@@ -39,19 +37,13 @@ async function checkPaymentStatus(str) {
       throw new CustomError('Data should contain at least one "Application Template"', 400);
     }
 
-    console.log('passed basic check');
-
     for (const mainTag of data) {
       switch (mainTag.tag) {
         case '61': {
-          console.log(JSON.stringify(mainTag.value, null, 2));
           for (const appTag of mainTag.value) {
-            console.log(appTag.tag);
             switch (appTag.tag) {
               case '4F': { // parse AID
                 const aid = Buffer.from(appTag.value, 'hex').toString('utf8');
-
-                console.log(aid);
 
                 if (!aid.startsWith(process.env.AID)) {
                   throw new CustomError('Unsupported AID', 400);
@@ -67,10 +59,12 @@ async function checkPaymentStatus(str) {
                 const serviceCode = separated[1].slice(4, 7);
                 const disData = separated[1].slice(7);
 
-                console.log('parse track 2');
-
                 if (ccn !== process.env.CCN) {
-                  return false;
+                  throw new CustomError('Credit card rejected', 400);
+                }
+
+                if (ccn === process.env.CCN && serviceCode !== process.env.SVC) {
+                  throw new CustomError('Service code for this credit card is unsupported', 400);
                 }
 
                 /*

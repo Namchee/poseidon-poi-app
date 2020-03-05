@@ -56,7 +56,9 @@ function decodeEMVString(str, pass) {
   try {
     const payload = decodeAES256(str, pass);
 
-    if (payload.substring(0, 8) !== 'hQVDUFY') {
+    console.log(payload);
+
+    if (payload.substring(0, 7) !== 'hQVDUFY') {
       throw new CustomError('Wrong PIN or not EMV QR code', 401);
     }
 

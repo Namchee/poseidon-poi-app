@@ -1,8 +1,15 @@
 const emv = require('node-emv');
 const CustomError = require('./types').CustomError;
-const promisify = require('util').promisify;
 
-const parse = promisify(emv.parse);
+const parse = (str) => new Promise((resolve, reject) => {
+  emv.parse(str, (data) => {
+    if (data) {
+      resolve(data);
+    }
+
+    reject(new Error('Cannot parse data'));
+  });
+});
 
 /**
  * A function to check if QR payload can be used for payment in Poseidon POI system
@@ -16,6 +23,8 @@ async function checkPaymentStatus(str) {
   try {
     const hexString = Buffer.from(str, 'base64').toString('hex');
     const data = await parse(hexString);
+
+    console.log('hai')
 
     if (data.length === 0) {
       throw new CustomError('Not EMV BER TLV encoded data', 400);

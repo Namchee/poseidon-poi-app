@@ -9,7 +9,7 @@ const parse = promisify(emv.parse);
  * Will throw an error with message if payload is not EMV BER TLV encoded string
  *
  * @param {string} str QR Payload
- * @return {boolean} `true` if card is accepted, `false` otherwise
+ * @return {Promise<boolean>} `true` if card is accepted, `false` otherwise
  * @throw An error if payload doesn't match specification
  */
 async function checkPaymentStatus(str) {

@@ -14,7 +14,7 @@ if (process.env.NODE_ENV !== 'production') {
   app.use(logger('dev'));
 }
 
-app.post('/poi-app', (req, res, next) => {
+app.post('/poi-app', async (req, res, next) => {
   const auth = req.headers.authorization;
 
   if (!auth || auth !== 'Bearer proif-kelompok-2') {
@@ -37,8 +37,10 @@ app.post('/poi-app', (req, res, next) => {
   try {
     const decodedPayload = decodeEMVString(payload, pin);
 
+    console.log(decodedPayload);
+
     return res.status(200).json({
-      data: checkPaymentStatus(decodedPayload),
+      data: await checkPaymentStatus(decodedPayload),
       error: null,
     });
   } catch (err) {

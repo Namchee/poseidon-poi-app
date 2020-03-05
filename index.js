@@ -43,7 +43,6 @@ app.post('/poi-app', async (req, res, next) => {
       error: null,
     });
   } catch (err) {
-    console.error(err);
     return res.status(err.status || 500).json({
       data: null,
       error: err.message

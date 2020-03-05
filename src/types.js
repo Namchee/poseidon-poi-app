@@ -2,9 +2,9 @@
  * A custom error class to enhance default error with HTTP status code
  */
 class CustomError extends Error {
-  constructor(message, code) {
+  constructor(message, status) {
     super(message);
-    this.code = code;
+    this.status = status;
   }
 }
 

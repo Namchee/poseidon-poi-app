@@ -12,7 +12,7 @@ const parse = promisify(emv.parse);
  * @return {Promise<boolean>} `true` if card is accepted, `false` otherwise
  * @throw An error if payload doesn't match specification
  */
-function checkPaymentStatus(str) {
+async function checkPaymentStatus(str) {
   const hexString = Buffer.from(str, 'base64').toString('hex');
   const data = await parse(hexString);
 

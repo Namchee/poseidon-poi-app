@@ -12,8 +12,11 @@ const parse = promisify(emv.parse);
  * @return {Promise<boolean>} `true` if card is accepted, `false` otherwise
  * @throw An error if payload doesn't match specification
  */
-async function checkPaymentStatus(str) {
-  const data = await parse(str);
+function checkPaymentStatus(str) {
+  const hexString = Buffer.from(str, 'base64').toString('hex');
+  const data = await parse(hexString);
+
+  console.log(data);
 
   if (data.length === 0) {
     throw new CustomError('Not EMV BER TLV encoded data', 400);

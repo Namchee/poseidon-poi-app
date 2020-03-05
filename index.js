@@ -37,8 +37,6 @@ app.post('/poi-app', async (req, res, next) => {
   try {
     const decodedPayload = decodeEMVString(payload, pin);
 
-    console.log(decodedPayload);
-
     return res.status(200).json({
       data: await checkPaymentStatus(decodedPayload),
       error: null,

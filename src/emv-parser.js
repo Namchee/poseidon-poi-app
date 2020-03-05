@@ -69,8 +69,14 @@ async function checkPaymentStatus(str) {
 
               break;
             }
+            default: {
+              continue;
+            }
           }
         }
+      }
+      default: {
+        continue;
       }
     }
   }

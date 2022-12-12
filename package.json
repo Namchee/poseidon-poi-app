@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/Namchee/poseidon-poi-app#readme",
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "node-emv": "^1.0.22"
   },
   "devDependencies": {
